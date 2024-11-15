@@ -1,7 +1,9 @@
 #include <iostream>
+#include <Windows.h>
+#include <chrono>
 using namespace std;
 
-#include <Windows.h>
+
 
 int nScreenWidth = 120;
 int nScreenHeight = 40;
@@ -41,8 +43,24 @@ int main() {
 	map += L"#..............#";
 	map += L"################";
 
+	auto timePoint1 = chrono::system_clock::now();
+	auto timePoint2 = chrono::system_clock::now();
+
+
 	// Game loop
 	while (1) {
+
+		timePoint2 = chrono::system_clock::now();
+		chrono::duration<float> elapsedTime = timePoint2 - timePoint1;
+		timePoint1 = timePoint2;
+		float fElapsedTime = elapsedTime.count();
+
+		// Controls
+		// Handle CCW (counterclockwise) Rotation
+		if (GetAsyncKeyState((unsigned short)'A') & 0x8000)
+			fPlayerA -= (0.1f) * fElapsedTime;
+		if (GetAsyncKeyState((unsigned short)'D') & 0x8000)
+			fPlayerA += (0.1f) * fElapsedTime;
 
 		for (int x = 0; x < nScreenWidth; x++) {
 			// For each column, calculate the projected ray angle into world space
